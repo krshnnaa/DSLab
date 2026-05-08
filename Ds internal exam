@@ -1,0 +1,109 @@
+#include <iostream>
+using namespace std;
+
+class Queue {
+private:
+    int *arr;
+    int front;
+    int rear;
+    int capacity;
+    int size;
+
+public:
+    // Constructor to initialize the queue
+    Queue(int cap) {
+        capacity = cap;
+        arr = new int[capacity];
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+
+    // Destructor to free memory
+    ~Queue() {
+        delete[] arr;
+    }
+
+    bool isFull() {
+        return size == capacity;
+    }
+
+    bool isEmpty() {
+        return size == 0;
+    }
+
+    void enqueue(int value) {
+        if (isFull()) {
+            cout << "Queue Overflow! Cannot add " << value << endl;
+            return;
+        }
+        // Circular increment of rear
+        rear = (rear + 1) % capacity;
+        arr[rear] = value;
+        size++;
+        cout << "Enqueued: " << value << endl;
+    }
+
+    void dequeue() {
+        if (isEmpty()) {
+            cout << "Queue Underflow! Nothing to remove." << endl;
+            return;
+        }
+        cout << "Dequeued: " << arr[front] << endl;
+        // Circular increment of front
+        front = (front + 1) % capacity;
+        size--;
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty." << endl;
+            return;
+        }
+        cout << "Queue elements: ";
+        int count = 0;
+        int i = front;
+        while (count < size) {
+            cout << arr[i] << " ";
+            i = (i + 1) % capacity;
+            count++;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    int cap, choice, val;
+
+    cout << "Enter the capacity of the queue: ";
+    cin >> cap;
+
+    Queue q(cap);
+
+    do {
+        cout << "\n1. Enqueue\n2. Dequeue\n3. Display\n4. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter value: ";
+                cin >> val;
+                q.enqueue(val);
+                break;
+            case 2:
+                q.dequeue();
+                break;
+            case 3:
+                q.display();
+                break;
+            case 4:
+                cout << "Exiting..." << endl;
+                break;
+            default:
+                cout << "Invalid choice!" << endl;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
